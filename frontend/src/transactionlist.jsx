@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTransactions } from '../redux/transactionsSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function TransactionsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   const { list: transactions, status, error } = useSelector(
     (state) => state.transactions
@@ -22,8 +23,8 @@ function TransactionsList() {
       navigate('/login');
       return;
     }
-    if (status === 'idle') dispatch(fetchTransactions());
-  }, [token, status, dispatch, navigate]);
+    dispatch(fetchTransactions());
+  }, [token, location.pathname, dispatch, navigate]);
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -33,7 +34,6 @@ function TransactionsList() {
 
   const balance = transactions.reduce((total, tx) => total + tx.amount, 0);
 
-  // ✅ Filtering logic
   const filteredTransactions = transactions.filter((tx) => {
     const matchTitle = tx.title.toLowerCase().includes(searchTerm.toLowerCase());
     if (filterType === 'income') return tx.amount >= 0 && matchTitle;
@@ -51,6 +51,7 @@ function TransactionsList() {
       </div>
     );
   }
+
   if (status === 'failed') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -61,7 +62,6 @@ function TransactionsList() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* ---------- Header ---------- */}
       <header className="bg-indigo-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
