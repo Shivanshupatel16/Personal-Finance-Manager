@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://your-backend.onrender.com/api/$1" }
+    { "source": "/api/(.*)", "destination": "https://personal-finance-manager-2wod.onrender.com/api/$1" }
   ]
 }
